@@ -1,5 +1,6 @@
 import my_functions
 import json
+from datetime import datetime
 
 class Person():
     def __init__(self, first_name, last_name):
@@ -7,12 +8,22 @@ class Person():
         self.last_name = last_name  
 
 class Subject(Person):
-    def __init__(self, first_name, last_name, age, sex, birthdate):
+    def __init__(self, first_name, last_name, sex, birthdate):
         super().__init__(first_name, last_name)
-        self.age = age
         self.sex = sex
-        self.max_hr = self.estimate_max_hr()
         self.__birthdate = birthdate
+        self.age = self.calc_age()
+        self.max_hr = self.estimate_max_hr()
+    
+    def calc_age(self):
+        heute = datetime.today()
+        birthdate = datetime.strptime(self.__birthdate, '%d.%m.%Y')
+      
+        age = heute.year - birthdate.year
+        if (heute.month, heute.day) < (birthdate.month, birthdate.day):
+            age -= 1
+        #print(age)
+        return int(age)
 
     def estimate_max_hr(self):
         return my_functions.estimate_max_hr(self.age,self.sex)
